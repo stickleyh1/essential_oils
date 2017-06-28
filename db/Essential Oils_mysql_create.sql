@@ -29,7 +29,7 @@ CREATE TABLE `Blend_Has_Oil` (
 
 CREATE TABLE `Order` (
 	`ID` INT NOT NULL AUTO_INCREMENT,
-	`Price` INT NOT NULL AUTO_INCREMENT,
+	`Price` INT NOT NULL,
 	`User` INT NOT NULL,
 	PRIMARY KEY (`ID`)
 );
@@ -50,6 +50,19 @@ CREATE TABLE `Order_Has_Product` (
 	PRIMARY KEY (`CompositeID`)
 );
 
+CREATE TABLE `Issue` (
+	`ID` INT NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (`ID`)
+);
+
+CREATE TABLE `Product_Solves_Issue` (
+	`CompositeID` VARCHAR(255) NOT NULL AUTO_INCREMENT,
+	`ProductID` INT NOT NULL,
+	`IssueID` INT NOT NULL,
+	PRIMARY KEY (`CompositeID`)
+);
+
 ALTER TABLE `Oil` ADD CONSTRAINT `Oil_fk0` FOREIGN KEY (`ProductID`) REFERENCES `Product`(`ID`);
 
 ALTER TABLE `Blend` ADD CONSTRAINT `Blend_fk0` FOREIGN KEY (`ProductID`) REFERENCES `Product`(`ID`);
@@ -63,4 +76,8 @@ ALTER TABLE `Order` ADD CONSTRAINT `Order_fk0` FOREIGN KEY (`User`) REFERENCES `
 ALTER TABLE `Order_Has_Product` ADD CONSTRAINT `Order_Has_Product_fk0` FOREIGN KEY (`OrderID`) REFERENCES `Order`(`ID`);
 
 ALTER TABLE `Order_Has_Product` ADD CONSTRAINT `Order_Has_Product_fk1` FOREIGN KEY (`ProductID`) REFERENCES `Product`(`ID`);
+
+ALTER TABLE `Product_Solves_Issue` ADD CONSTRAINT `Product_Solves_Issue_fk0` FOREIGN KEY (`ProductID`) REFERENCES `Product`(`ID`);
+
+ALTER TABLE `Product_Solves_Issue` ADD CONSTRAINT `Product_Solves_Issue_fk1` FOREIGN KEY (`IssueID`) REFERENCES `Issue`(`ID`);
 
