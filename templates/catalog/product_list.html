@@ -1,0 +1,24 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h1>Product List</h1>
+
+    {% if product_list %}
+    <ul>
+
+      {% for product in product_list %}
+        <li>
+          {% if product.isBlend %}
+            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Blended Oil) - ({{product.price}})
+          {% else %}
+            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Single Oil) - ({{product.price}})
+          {% endif %}
+        </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no products in the catalog.</p>
+    {% endif %}       
+{% endblock %}

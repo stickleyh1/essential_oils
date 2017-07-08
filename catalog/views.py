@@ -1,14 +1,13 @@
-# from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
-
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+from django.views import generic
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from datetime import datetime as dt
-
 from django.contrib.auth.models import User
+
 from catalog.models import Product, Order, Ailment
 
 # -------------------------------------
@@ -22,7 +21,47 @@ def index(request):
 	context_dict['num_ailments'] = Ailment.objects.all().count()
 	return render(request, 'catalog/index.html', context_dict)
 
+def search(request):
+	if request.GET.get('q'):
+		query = ''+request.GET.get('q')
+		if query != None:
+			return render(request, 'catalog/search_results.html')
 
+	return render(request, 'catalog/search.html')
+
+def search_results(request):
+	if request.GET.get('q'):
+		query = ''+request.GET.get('q')
+		if query != None:
+			results = []
+			objs = Product.objects.filter(name__icontains=query).order_by('isBlend')
+			for m in objs:
+				results.append(m)
+			return render(request, 'catalog/search_results.html', {"results": results,})
+
+	return render(request, 'catalog/search.html')
+
+class ProductListView(generic.ListView):
+    model = Product
+
+class ProductDetailView(generic.DetailView):
+    model = Product
+
+class AilmentListView(generic.ListView):
+    model = Ailment
+
+# class UserDetailView(generic.DetailView):
+# 	model = User
+
+# 	def get_context_data(self, **kwargs):
+# 		context = super(UserDetailView, self).get_context_data(**kwargs)
+# 		context['instances'] = MediaInstance.objects.all()
+# 		context['medias'] = Media.objects.all()
+# 		for i in context['instances']:
+# 			if i.due_date and i.due_date < dt.date.today():
+# 				i.late_fee = (dt.date.today() - i.due_date).days
+
+# 		return context
 
 # -------------------------------------
 # User Authentication

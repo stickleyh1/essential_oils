@@ -24,9 +24,9 @@
       {% endif %}
       <ul class="sidebar-nav">
         <li><a href="{% url 'index' %}">Home</a></li>
-        <li><a href="">Products</a></li>
-        <li><a href="">Ailments</a></li>
-        <li><a href="">Search</a></li>
+        <li><a href="{% url 'product' %}">Products</a></li>
+        <li><a href="{% url 'ailment' %}">Ailments</a></li>
+        <li><a href="{% url 'search' %}">Search</a></li>
         <hr/>
         {% if user.is_authenticated %}
           <li><a href="{% url 'auth_logout' %}?next=/catalog/">Logout</a>

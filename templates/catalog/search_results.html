@@ -1,0 +1,21 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+  <h1>Search Results</h1>
+  {% if results %}
+    {% for result in results %}
+      <li>
+        {% if result.isBlend %}
+          <a href="{{ result.get_absolute_url }}">{{ result.name }}</a> (Blended Oil) - ({{result.price}})
+        {% else %}
+          <a href="{{ result.get_absolute_url }}">{{ result.name }}</a> (Single Oil) - ({{result.price}})
+        {% endif %}
+      </li>
+    {% endfor %}
+  {% else %}
+      <p>There were no oils found.</p>
+  {% endif %}
+
+{% endblock %}

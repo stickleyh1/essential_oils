@@ -1,0 +1,26 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Title: {{ product.name }}</h1>
+            <p>
+                <strong>Description:</strong> {{ product.description }}
+            </p>    
+            <p>
+                <strong>Price:</strong> {{ product.price }}
+            </p> 
+            <p>
+                <strong>Ailments:</strong> 
+                    {% for ailment in product.ailments.all %} 
+                        {{ ailment }}
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+            </p>    
+            <br/>
+        </div>
+    </div>
+    
+    
+{% endblock %}

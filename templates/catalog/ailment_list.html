@@ -1,0 +1,20 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h1>Ailment List</h1>
+
+    {% if ailment_list %}
+    <ul>
+
+      {% for ailment in ailment_list %}
+      <li>
+        <a href="">{{ ailment.name }}</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+    {% else %}
+      <p>There are no ailments treated in the catalog.</p>
+    {% endif %}       
+{% endblock %}
