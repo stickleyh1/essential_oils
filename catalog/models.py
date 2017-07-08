@@ -20,7 +20,10 @@ class Product(models.Model):
 	ailments = models.ManyToManyField(Ailment, help_text="Select the ailments this product treats", related_name="Ailments")
 
 	def __str__(self):
-		return '%s - %s' % (self.name, self.price)
+		if self.isBlend:
+			return '%s (Blended Oil) - %s' % (self.name, self.price)
+		else:
+			return '%s (Single Oil) - %s' % (self.name, self.price)
 
 	def get_absolute_url(self):
 		return reverse('product-detail', args=[str(self.id)])
