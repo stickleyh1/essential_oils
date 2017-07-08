@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   
-  {% block title %}<title>Library</title>{% endblock %}
+  {% block title %}<title>Essential Oils</title>{% endblock %}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -19,8 +19,22 @@
     <div class="row">
       <div class="col-sm-2">
       {% block sidebar %}
+      {% if user.is_authenticated %}
+        <p class="greeting"><strong>Hello, {{ user.username }}</strong></p>
+      {% endif %}
       <ul class="sidebar-nav">
-          <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="{% url 'index' %}">Home</a></li>
+        <li><a href="">Products</a></li>
+        <li><a href="">Ailments</a></li>
+        <li><a href="">Search</a></li>
+        <hr/>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'auth_logout' %}?next=/catalog/">Logout</a>
+          <li><a href="{% url 'auth_password_change' %}">Change Passsword</a>
+        {% else %}
+          <li><a href="{% url 'registration_register' %}">Sign Up</a></li>
+          <li><a href="{% url 'auth_login' %}">Login</a>
+        {% endif %}
       </ul>
      {% endblock %}
       </div>
