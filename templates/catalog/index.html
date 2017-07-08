@@ -2,12 +2,21 @@
 {% load staticfiles %}
 
 {% block content %}
-<h1>Library Home</h1>
+<h1>Essential Oil Home</h1>
 
-  <p>Welcome to the library</p>
+  	<p>Welcome to the Essential Oil Catalog</p>
 
 <h2>Current Inventory</h2>
 
-  <p>The library has the following record counts:</p>
+  	<ul>
+   		<li><strong>Products:</strong> {{ num_products }}</li>
+    	<ul>
+	    	<li><strong>Single Oils:</strong> {{ num_singles }}</li>
+	    	<li><strong>Blended Oils:</strong> {{ num_blends }}</li>
+    	</ul>
+  	</ul>
+
+  	<p><strong>Ailments treated:</strong> {{ num_ailments }} </p>
+
 
 {% endblock %}
