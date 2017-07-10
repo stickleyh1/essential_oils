@@ -1,0 +1,28 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <h1>Current Cart</h1>
+
+    {% if cart %}
+      <ul>
+
+        {% for product in cart %}
+          <li>
+            {% if product.isBlend %}
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Blended Oil) - ({{product.price}})
+            {% else %}
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Single Oil) - ({{product.price}})
+            {% endif %}
+          </li>
+        {% endfor %}
+        <hr/>
+        <p>Your total price is: ${{total}}</p>
+        <hr/>
+        <a href="{% url 'checkout' %}"><input type="button" name="checkout" value="Checkout"></a>
+
+      </ul>
+    {% else %}
+      <p>There are no products in your cart.</p>
+    {% endif %}       
+{% endblock %}

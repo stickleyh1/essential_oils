@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 
+
+import uuid
 from catalog.models import Product, Order, Ailment
 
 # -------------------------------------
@@ -35,17 +37,76 @@ def search_results(request):
 		if query != None:
 			results = []
 			objs = Product.objects.filter(name__icontains=query).order_by('isBlend')
-			for m in objs:
-				results.append(m)
+			for p in objs:
+				results.append(p)
 			return render(request, 'catalog/search_results.html', {"results": results,})
 
 	return render(request, 'catalog/search.html')
+
+def product_added(request):
+	if 'current' in request.session:
+		if 'cart' in request.session:
+			cart = request.session['cart']
+			cart.append(request.session['current'])
+			request.session['cart'] = cart
+		else:
+			request.session['cart'] = [request.session['current']]
+		request.session.modified = True
+
+	return HttpResponseRedirect(reverse('index'))
+
+def cart(request):
+	products = []
+	if 'cart' in request.session:
+		ids = []
+		for idStr in request.session['cart']:
+			ids.append(uuid.UUID(idStr[0]).hex)
+		objs = Product.objects.filter(pk__in=ids)
+		total = 0
+		for p in objs:
+			total += p.price
+			products.append(p)
+		return render(request, 'catalog/cart.html', {"cart": products, "total": total})
+	return render(request, 'catalog/cart.html')
+
+def checkout(request):
+	if request.user.is_authenticated():
+		# o = Order.objects.get_or_create(id= uuid.uuid4())
+		# o.buyer = request.user
+		total = 0
+		ids = []
+		for idStr in request.session['cart']:
+			ids.append(uuid.UUID(idStr[0]).hex)
+		objs = Product.objects.filter(pk__in=ids)
+		for p in objs:
+			total = total + p.price
+			# o.products.add(p)
+		# o.total = total
+		# o.save()
+		request.session['cart'] = []
+		request.session.modified = True
+
+		# for p in objs:
+		# 	order.products.add(p)
+
+		order = Order.objects.create(id=uuid.uuid4(), total=total, buyer=request.user, products=objs)
+		order.save()
+		return HttpResponse("OK")
+	return HttpResponseRedirect(reverse('index'))
+
 
 class ProductListView(generic.ListView):
     model = Product
 
 class ProductDetailView(generic.DetailView):
     model = Product
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(ProductDetailView, self).get_context_data(**kwargs)
+        self.request.session['current'] = [str(self.object.pk)]
+        self.request.session.modified = True
+        return context
 
 class AilmentListView(generic.ListView):
     model = Ailment

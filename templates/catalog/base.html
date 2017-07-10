@@ -19,14 +19,21 @@
     <div class="row">
       <div class="col-sm-2">
       {% block sidebar %}
+      <p class="greeting">
       {% if user.is_authenticated %}
-        <p class="greeting"><strong>Hello, {{ user.username }}</strong></p>
+        <strong>Hello, {{ user.username }}</strong>
+      {% else %}
+        <strong>Hello, Guest</strong>
       {% endif %}
+      </p>
       <ul class="sidebar-nav">
         <li><a href="{% url 'index' %}">Home</a></li>
         <li><a href="{% url 'product' %}">Products</a></li>
         <li><a href="{% url 'ailment' %}">Ailments</a></li>
         <li><a href="{% url 'search' %}">Search</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'cart' %}">Cart</a></li>
+        {% endif %}
         <hr/>
         {% if user.is_authenticated %}
           <li><a href="{% url 'auth_logout' %}?next=/catalog/">Logout</a>
