@@ -1,0 +1,33 @@
+{% extends 'catalog/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-6">
+            <h1>Username: {{ user.username }}</h1>
+            <p>
+                <strong>Email:</strong> {{ user.email }}
+            </p>    
+            
+            <p>
+                <strong>Order History:</strong> 
+                <br/>
+                    {% if orders %}
+                        {% for order in orders %} 
+                            <p style="margin-left:25px">{{ order.id }} - {{ order.total }}</p>
+                            <ul>
+                                {% for product in order.products.all %}
+                                <li>{{ product }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% if not forloop.last %}<hr/>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p style="margin-left:25px">No orders placed</p>
+                    {% endif %}
+            </p>    
+        </div>
+    </div>
+    
+    
+{% endblock %}

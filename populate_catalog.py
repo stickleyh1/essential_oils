@@ -13,12 +13,20 @@ def populate():
 		'email': 'jsmith@email.com',
 		'pwd': 'password',
 		'fname': 'John',
-		'lname': 'Smith'},
+		'lname': 'Smith',
+		'is_superuser': False},
 		{'username': 'jdoe',
 		'email': 'jdoe@email.com',
 		'pwd': 'password',
 		'fname': 'Jane',
-		'lname': 'Doe'}
+		'lname': 'Doe',
+		'is_superuser': False},
+		{'username': 'root',
+		'email': 'admin@email.com',
+		'pwd': 'unsecure',
+		'fname': 'Root',
+		'lname': 'User',
+		'is_superuser': True}
 	]
 
 	orders = [
@@ -257,10 +265,20 @@ def add_user(data):
 	if u.exists():
 		pass
 	else:
-		u = User.objects.create_user(data['username'], data['email'], data['pwd'])
-		u.first_name = data['fname']
-		u.last_name = data['lname']
-		u.save()
+		if data['is_superuser']:
+			u = User.objects.create_superuser(data['username'], data['email'], data['pwd'])
+			u.first_name = data['fname']
+			u.last_name = data['lname']
+			u.is_superuser = data['is_superuser']
+			u.save()
+
+		else:
+			u = User.objects.create_user(data['username'], data['email'], data['pwd'])
+			u.first_name = data['fname']
+			u.last_name = data['lname']
+			u.is_superuser = data['is_superuser']
+			u.save()
+		
 	print(u)
 	return u
 

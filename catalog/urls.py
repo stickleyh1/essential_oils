@@ -12,5 +12,6 @@ urlpatterns = [
 	url(r'^search/$', views.search, name="search"),
 	url(r'^search_results/$', views.search_results, name="search_results"),
 	url(r'^cart/$', views.cart, name='cart'),
-	url(r'^checkout/$', views.checkout, name='checkout')
+	url(r'^checkout/$', views.checkout, name='checkout'),
+	url(r'^user_details/$', views.UserDetailsView, name='user_details'),
 ]

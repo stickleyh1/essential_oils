@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 
+from django.core.mail import send_mail
 
 import uuid
 from catalog.models import Product, Order, Ailment
@@ -53,7 +54,7 @@ def product_added(request):
 			request.session['cart'] = [request.session['current']]
 		request.session.modified = True
 
-	return HttpResponseRedirect(reverse('index'))
+	return HttpResponseRedirect(reverse('product'))
 
 def cart(request):
 	products = []
@@ -71,29 +72,43 @@ def cart(request):
 
 def checkout(request):
 	if request.user.is_authenticated():
-		# o = Order.objects.get_or_create(id= uuid.uuid4())
-		# o.buyer = request.user
+		#Saving order
 		total = 0
 		ids = []
 		for idStr in request.session['cart']:
 			ids.append(uuid.UUID(idStr[0]).hex)
+
+		order = Order.objects.create(id=uuid.uuid4())
 		objs = Product.objects.filter(pk__in=ids)
 		for p in objs:
 			total = total + p.price
-			# o.products.add(p)
-		# o.total = total
-		# o.save()
 		request.session['cart'] = []
 		request.session.modified = True
-
-		# for p in objs:
-		# 	order.products.add(p)
-
-		order = Order.objects.create(id=uuid.uuid4(), total=total, buyer=request.user, products=objs)
+		order.total=total
+		order.buyer=request.user
+		order.products=objs
 		order.save()
-		return HttpResponse("OK")
+
+		#Sending order to admins
+		admins = User.objects.filter(is_staff=True)
+
+		message = '<p style="margin-left:25px">'+str(order)+'</p><ul>'
+		for product in objs:
+			message += '<li>' +str(product)+ '</li>'
+		message += '</ul>'
+		email_list = []
+		for admin in admins:
+			email_list.append(admin.email)
+		send_mail('New Order- '+str(order.id), message, 'mail_server@essential_oils.com', email_list)
+
 	return HttpResponseRedirect(reverse('index'))
 
+def UserDetailsView(request):
+	if request.user.is_authenticated():
+		orders = Order.objects.filter(buyer=request.user)
+		return render(request, 'catalog/user_details.html', {'orders': orders})
+	else:
+		return HttpResponseRedirect(reverse('index'))
 
 class ProductListView(generic.ListView):
     model = Product
