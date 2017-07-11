@@ -22,7 +22,7 @@ def populate():
 		'lname': 'Doe',
 		'is_superuser': False},
 		{'username': 'root',
-		'email': 'admin@email.com',
+		'email': 'stickleyh1@student.lasalle.edu',
 		'pwd': 'unsecure',
 		'fname': 'Root',
 		'lname': 'User',
