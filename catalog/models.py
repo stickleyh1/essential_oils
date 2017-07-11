@@ -21,9 +21,9 @@ class Product(models.Model):
 
 	def __str__(self):
 		if self.isBlend:
-			return '%s (Blended Oil) - %s' % (self.name, self.price)
+			return '%s (Blended Oil) - $%s' % (self.name, self.price)
 		else:
-			return '%s (Single Oil) - %s' % (self.name, self.price)
+			return '%s (Single Oil) - $%s' % (self.name, self.price)
 
 	def get_absolute_url(self):
 		return reverse('product-detail', args=[str(self.id)])
@@ -35,4 +35,4 @@ class Order(models.Model):
 	products = models.ManyToManyField(Product, help_text="Select the products in this order", related_name="Products")
 
 	def __str__(self):
-		return '%s : %s (%s)' % (self.buyer.username, self.total, self.id)
+		return 'Buyer: %s - $%s (%s)' % (self.buyer.username, self.total, self.id)

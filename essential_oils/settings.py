@@ -145,4 +145,16 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS        = True
+EMAIL_HOST           = 'smtp.postmarkapp.com'
+EMAIL_PORT           = 587
+POSTMARK_API_KEY     = '6f678c5e-bfbd-4a55-801a-cacb0d754438'
+POSTMARK_SENDER      = 'stickleyh1@student.lasalle.edu'
+EMAIL_HOST_USER      = POSTMARK_SENDER
+DEFAULT_FROM_EMAIL   = POSTMARK_SENDER
+POSTMARK_TEST_MODE   = False
+POSTMARK_TRACK_OPENS = False
+EMAIL_BACKEND        = 'postmark.django_backend.EmailBackend'

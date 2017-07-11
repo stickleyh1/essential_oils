@@ -10,6 +10,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 
 from django.core.mail import send_mail
+# from django.core.mail import mail_admins
+# from django.core import mail
 
 import uuid
 from catalog.models import Product, Order, Ailment
@@ -45,6 +47,7 @@ def search_results(request):
 
 	return render(request, 'catalog/search.html')
 
+@login_required
 def product_added(request):
 	if 'current' in request.session:
 		if 'cart' in request.session:
@@ -57,6 +60,7 @@ def product_added(request):
 
 	return HttpResponseRedirect(reverse('product'))
 
+@login_required
 def cart(request):
 	products = []
 	if 'cart' in request.session:
@@ -71,6 +75,7 @@ def cart(request):
 		return render(request, 'catalog/cart.html', {"cart": products, "total": total})
 	return render(request, 'catalog/cart.html')
 
+@login_required
 def checkout(request):
 	if request.user.is_authenticated():
 		#Saving order
@@ -92,15 +97,22 @@ def checkout(request):
 
 		#Sending order to admins
 		admins = User.objects.filter(is_staff=True)
-
-		message = '<p style="margin-left:25px">'+str(order)+'</p><ul>'
+		# connection = mail.get_connection()
+		# connection.open()
+		htmlmessage = '<p style="margin-left:25px">'+str(order)+'</p><ul>'
 		for product in objs:
-			message += '<li>' +str(product)+ '</li>'
-		message += '</ul>'
+			htmlmessage += '<li>' +str(product)+ '</li>'
+		htmlmessage += '</ul>'
+		message = str(order)+'\n'
+		for product in objs:
+			message += '>>>' +str(product)+ '\n'
 		email_list = []
 		for admin in admins:
 			email_list.append(admin.email)
-		send_mail('New Order- '+str(order.id), message, 'mail_server@essential_oils.com', email_list)
+		send_mail('New Order from '+str(order.buyer.username), message, 'stickleyh1@student.lasalle.edu', email_list, html_message=htmlmessage)
+		# email = mail.EmailMessage('New Order- '+str(order.id), message, 'mail_server@essential_oils.com', email_list)
+		# connection.send_messages([email])
+		# connection.close
 
 	return HttpResponseRedirect(reverse('index'))
 

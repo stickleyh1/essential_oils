@@ -4,3 +4,4 @@ Pillow
 bcrypt
 django-registration-redux==1.4
 python-postmark
+mock
