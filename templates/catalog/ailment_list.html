@@ -9,7 +9,7 @@
 
       {% for ailment in ailment_list %}
       <li>
-        <a href="">{{ ailment.name }}</a>
+        <a href="{% url 'search_results'%}?q={{ailment.name}}">{{ ailment.name }}</a>
       </li>
       {% endfor %}
 

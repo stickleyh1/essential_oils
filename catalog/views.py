@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.views import generic
+from django.db.models import Q
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -37,7 +38,7 @@ def search_results(request):
 		query = ''+request.GET.get('q')
 		if query != None:
 			results = []
-			objs = Product.objects.filter(name__icontains=query).order_by('isBlend')
+			objs = Product.objects.filter(Q(name__icontains=query) | Q(ailments__name__icontains=query)).distinct().order_by('isBlend')
 			for p in objs:
 				results.append(p)
 			return render(request, 'catalog/search_results.html', {"results": results,})
