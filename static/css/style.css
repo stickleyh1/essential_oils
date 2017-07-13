@@ -1,8 +1,8 @@
-.sidebar-nav {
-    padding: 0;
-    list-style: none;
+.jumbotron{
+	margin-top: 2rem;
+	background-color: #dee8ed;
 }
 
-.greeting{
-    margin-top: 20px;
+body{
+	background-color: #969da3;
 }

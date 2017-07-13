@@ -10,8 +10,6 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 
 from django.core.mail import send_mail
-# from django.core.mail import mail_admins
-# from django.core import mail
 
 import uuid
 from catalog.models import Product, Order, Ailment
@@ -40,7 +38,7 @@ def search_results(request):
 		query = ''+request.GET.get('q')
 		if query != None:
 			results = []
-			objs = Product.objects.filter(Q(name__icontains=query) | Q(ailments__name__icontains=query)).distinct().order_by('isBlend')
+			objs = Product.objects.filter(Q(name__icontains=query) | Q(ailments__name__icontains=query)).distinct().order_by('isBlend', 'name')
 			for p in objs:
 				results.append(p)
 			return render(request, 'catalog/search_results.html', {"results": results,})
@@ -95,25 +93,31 @@ def checkout(request):
 		order.products=objs
 		order.save()
 
-		#Sending order to admins
 		admins = User.objects.filter(is_staff=True)
-		# connection = mail.get_connection()
-		# connection.open()
+
+		# HTML message for email
 		htmlmessage = '<p style="margin-left:25px">'+str(order)+'</p><ul>'
 		for product in objs:
 			htmlmessage += '<li>' +str(product)+ '</li>'
 		htmlmessage += '</ul>'
+
+		# Plain text message for email
 		message = str(order)+'\n'
 		for product in objs:
 			message += '>>>' +str(product)+ '\n'
+
 		email_list = []
 		for admin in admins:
 			email_list.append(admin.email)
 		send_mail('New Order from '+str(order.buyer.username), message, 'stickleyh1@student.lasalle.edu', email_list, html_message=htmlmessage)
-		# email = mail.EmailMessage('New Order- '+str(order.id), message, 'mail_server@essential_oils.com', email_list)
-		# connection.send_messages([email])
-		# connection.close
 
+	return HttpResponseRedirect(reverse('index'))
+
+@login_required
+def clear_cart(request):
+	if request.user.is_authenticated():
+		request.session['cart'] = []
+		request.session.modified = True
 	return HttpResponseRedirect(reverse('index'))
 
 def UserDetailsView(request):

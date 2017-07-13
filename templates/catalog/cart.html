@@ -10,17 +10,23 @@
         {% for product in cart %}
           <li>
             {% if product.isBlend %}
-              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Blended Oil) - ({{product.price}})
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Blended Oil) - ${{product.price}}
             {% else %}
-              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Single Oil) - ({{product.price}})
+              <a href="{{ product.get_absolute_url }}">{{ product.name }}</a> (Single Oil) - ${{product.price}}
             {% endif %}
           </li>
         {% endfor %}
         <hr/>
         <p>Your total price is: ${{total}}</p>
         <hr/>
-        <a href="{% url 'checkout' %}"><input type="button" name="checkout" value="Checkout"></a>
-
+        <div class="row">
+          <div class="col-sm-4">
+            <a href="{% url 'checkout' %}"><input type="button" name="checkout" value="Checkout" class="btn btn-primary btn-block"></a>
+          </div>
+          <div class="col-sm-4">
+            <a href="{% url 'clear_cart' %}"><input type="button" name="clear" value="Empty Cart" class="btn btn-danger btn-block"></a
+          </div>
+        </div>
       </ul>
     {% else %}
       <p>There are no products in your cart.</p>

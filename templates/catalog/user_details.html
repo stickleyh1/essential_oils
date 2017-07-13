@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <h1>Username: {{ user.username }}</h1>
             <p>
                 <strong>Email:</strong> {{ user.email }}
@@ -14,7 +14,7 @@
                 <br/>
                     {% if orders %}
                         {% for order in orders %} 
-                            <p style="margin-left:25px">{{ order.id }} - {{ order.total }}</p>
+                            <p style="margin-left:25px">{{ order.id }} - ${{ order.total }}</p>
                             <ul>
                                 {% for product in order.products.all %}
                                 <li>{{ product }}</li>
